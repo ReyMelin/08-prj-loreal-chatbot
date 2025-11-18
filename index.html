@@ -21,8 +21,58 @@
       <!------- Header / Branding ------->
       <header class="site-header">
         <img src="img/loreal-logo.png" alt="L'Oréal Logo" class="site-logo" />
-        <h1 class="site-title">Smart Product Advisor</h1>
+        <h1 class="site-title">Smart Beauty Advisor</h1>
       </header>
+
+      <!------- Product Browse Section ------->
+      <section class="product-section">
+        <div class="product-controls">
+          <h2>Browse Our Products</h2>
+          <label for="categoryFilter" class="visually-hidden"
+            >Filter by category</label
+          >
+          <select id="categoryFilter" class="category-dropdown">
+            <option value="all">-------</option>
+            <option value="cleanser">Cleansers</option>
+            <option value="moisturizer">Moisturizers</option>
+            <option value="skincare">Skincare</option>
+            <option value="makeup">Makeup</option>
+            <option value="haircare">Haircare</option>
+            <option value="hair color">Hair Color</option>
+            <option value="hair styling">Hair Styling</option>
+            <option value="men's grooming">Men's Grooming</option>
+            <option value="suncare">Suncare</option>
+            <option value="fragrance">Fragrance</option>
+          </select>
+        </div>
+
+        <!-- Product Grid -->
+        <div id="productGrid" class="product-grid">
+          <!-- Products will be loaded here via JavaScript -->
+        </div>
+      </section>
+
+      <!------- Selected Products Section ------->
+      <section class="selected-section">
+        <h2>Your Selected Products</h2>
+        <div id="selectedProducts" class="selected-products">
+          <p class="empty-message">
+            No products selected yet. Click on products above to add them!
+          </p>
+        </div>
+        <div class="selected-actions">
+          <button id="generateRoutineBtn" class="routine-btn">
+            Generate Routine with My Products
+          </button>
+          <button
+            id="clearSelectedBtn"
+            class="clear-btn"
+            title="Clear All Selected Products"
+          >
+            Clear All
+          </button>
+        </div>
+      </section>
 
       <!------- Chat Area ------->
       <main>
