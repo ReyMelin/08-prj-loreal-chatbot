@@ -1,4 +1,6 @@
-/* DOM elements */
+/* ================================
+   DOM ELEMENTS
+================================ */
 const chatForm = document.getElementById("chatForm");
 const userInput = document.getElementById("userInput");
 const chatWindow = document.getElementById("chatWindow");
@@ -8,165 +10,298 @@ const selectedProductsDiv = document.getElementById("selectedProducts");
 const generateRoutineBtn = document.getElementById("generateRoutineBtn");
 const clearSelectedBtn = document.getElementById("clearSelectedBtn");
 
-// Array to store all products
+/* ================================
+   STATE
+================================ */
 let allProducts = [];
+let selectedProducts = [];
 
-// Load products from JSON file when page loads
+let conversationHistory = [
+  {
+    role: "system",
+    content:
+      "You are Scott, a warm, friendly, and enthusiastic L'Oréal beauty advisor chatbot. When someone tells you their name, always greet them warmly using their name and introduce yourself as Scott. For example: 'Hi [Name]! I'm Scott, your L'Oréal beauty advisor! 💄✨' Remember their name throughout the conversation and use it occasionally to personalize responses. Your ONLY role is to help customers with L'Oréal products, skincare routines, makeup tips, and haircare recommendations. You must ONLY answer questions related to L'Oréal products, beauty, skincare, haircare, and makeup. If someone asks about ANY topic unrelated to L'Oréal or beauty (including other brands, politics, general knowledge, math, coding, or anything else), you must politely refuse by saying: 'I'm here to help with L'Oréal products and beauty advice. How can I assist you with your beauty needs today?' Do not answer off-topic questions under any circumstances. Keep all responses helpful, friendly, and under 100 words. Use encouraging phrases like 'Yass queen!', 'Slay!', 'You're serving looks!', 'Iconic!', 'Stunning!', 'Living for this!', 'Obsessed!', 'That's giving main character energy!', 'Werk it!' to make users feel fabulous and confident. When providing lists or recommendations, use clear formatting with bullet points. Use emojis throughout your responses to make them more engaging and friendly (💄 💅 ✨ 💖 🌟 😊 👍 🎉 💆‍♀️ 🧴 👑 🔥 etc.)",
+  },
+];
+
+/* ================================
+   LOAD PRODUCTS
+================================ */
 async function loadProducts() {
   try {
     // Fetch the products.json file
-    const response = await fetch("products.json");
-    const data = await response.json();
+    const res = await fetch("products.json");
+    const data = await res.json();
 
-    // Store products in our array
+    // Store products in the allProducts array
     allProducts = data.products;
 
-    // Display all products initially
-    displayProducts(allProducts);
-  } catch (error) {
-    console.error("Error loading products:", error);
+    // Display products in the grid
+    displayProducts();
+  } catch (err) {
+    console.error("Error loading products:", err);
+
+    // Show an error message in the product grid
     productGrid.innerHTML =
       "<p>Error loading products. Please try again later.</p>";
   }
 }
 
-// Update selected products UI
+// Call loadProducts to fetch and display products when the page loads
+loadProducts();
+
+/* ================================
+   UI HELPERS
+================================ */
+function getVisibleProducts() {
+  return allProducts.filter(
+    (p) => !selectedProducts.some((sel) => sel.id === p.id)
+  );
+}
+
 function updateSelectedProductsUI() {
-  // Clear selected products div
   selectedProductsDiv.innerHTML = "";
 
   if (selectedProducts.length === 0) {
-    selectedProductsDiv.innerHTML = `<p class="empty-message">No products selected yet. Click on products above to add them!</p>`;
+    selectedProductsDiv.innerHTML = `<p class="empty-message">No products selected yet. Click to add some!</p>`;
     return;
   }
 
-  // Show each selected product as a tag/card
   selectedProducts.forEach((product) => {
     const tag = document.createElement("div");
     tag.className = "selected-product-tag";
+
     tag.innerHTML = `
-      <img src="${product.image}" alt="${product.name}" style="width:32px;height:32px;object-fit:contain;border-radius:6px;">
+      <img src="${product.image}" alt="${product.name}" />
       <span>${product.name}</span>
-      <button class="remove-btn" title="Remove">&times;</button>
+      <button class="remove-btn">&times;</button>
     `;
-    // Remove button handler
-    tag.querySelector(".remove-btn").onclick = () => {
-      // Remove from selectedProducts
-      selectedProducts = selectedProducts.filter((p) => p.id !== product.id);
-      // Show product again in grid
-      displayProducts(getVisibleProducts());
-      // Update selected products UI
-      updateSelectedProductsUI();
-    };
+
+    tag.querySelector(".remove-btn").addEventListener("click", () => {
+      removeSelectedProduct(product.id);
+    });
+
     selectedProductsDiv.appendChild(tag);
   });
 }
 
-// Get products not selected (for grid)
-function getVisibleProducts() {
-  return allProducts.filter(
-    (product) => !selectedProducts.some((sel) => sel.id === product.id)
-  );
+function removeSelectedProduct(id) {
+  selectedProducts = selectedProducts.filter((p) => p.id !== id);
+  updateSelectedProductsUI();
+  displayProducts();
 }
 
-// Display products in the grid (hide selected, only show for chosen category)
-function displayProducts(products) {
+/* ================================
+   DISPLAY PRODUCT GRID
+================================ */
+function displayProducts() {
   productGrid.innerHTML = "";
 
-  // If no category is selected or "all", show nothing
-  if (!categoryFilter.value || categoryFilter.value === "all") {
+  const category = categoryFilter.value;
+
+  if (!category || category === "all") {
     productGrid.innerHTML =
       "<p class='empty-message'>Select a category to view products.</p>";
     return;
   }
 
-  // Filter products to only those in the selected category and not selected
-  const visibleProducts = products.filter(
-    (product) =>
-      product.category.toLowerCase() === categoryFilter.value.toLowerCase() &&
-      !selectedProducts.some((sel) => sel.id === product.id)
+  const visible = getVisibleProducts().filter(
+    (p) => p.category.toLowerCase() === category.toLowerCase()
   );
 
-  if (visibleProducts.length === 0) {
+  if (visible.length === 0) {
     productGrid.innerHTML = "<p>No products found in this category.</p>";
     return;
   }
 
-  visibleProducts.forEach((product) => {
+  visible.forEach((product) => {
     const card = document.createElement("div");
     card.className = "product-card";
     card.dataset.id = product.id;
+
     card.innerHTML = `
       <img src="${product.image}" alt="${product.name}" />
       <div class="brand">${product.brand}</div>
       <h3>${product.name}</h3>
       <div class="category">${product.category}</div>
-      <button class="more-info-btn" title="More Info">i</button>
+      <button class="more-info-btn">i</button>
     `;
+
     productGrid.appendChild(card);
   });
 }
 
-// Filter products by category (hide selected)
-function filterProducts(category) {
-  // Only show products for the selected category and not selected
-  displayProducts(allProducts);
+/* ================================
+   EVENT: CATEGORY CHANGE
+================================ */
+categoryFilter.addEventListener("change", () => {
+  displayProducts();
+});
+
+/* ================================
+   EVENT: CLEAR SELECTED
+================================ */
+clearSelectedBtn.addEventListener("click", () => {
+  selectedProducts = [];
+  updateSelectedProductsUI();
+  displayProducts();
+});
+
+/* ================================
+   EVENT: GENERATE ROUTINE
+================================ */
+if (generateRoutineBtn) {
+  generateRoutineBtn.addEventListener("click", async () => {
+    // Collect selected products
+    if (selectedProducts.length === 0) {
+      addChatBubble(
+        "Please select at least one product to generate your routine!",
+        "ai"
+      );
+      return;
+    }
+
+    // Prepare product data to send to the API
+    const productData = selectedProducts.map((product) => ({
+      name: product.name,
+      brand: product.brand,
+      category: product.category,
+      description: product.description,
+    }));
+
+    console.log("Selected Products:", selectedProducts);
+    console.log("Product Data:", productData);
+    console.log("Fetching API key from Cloudflare...");
+
+    // Add a loading message to the chat window
+    const loadingBubble = addChatBubble(
+      "<em>Creating your personalized beauty routine…</em>",
+      "ai"
+    );
+
+    try {
+      // Fetch the OpenAI API key from Cloudflare
+      const keyResponse = await fetch(
+        "https://round-hill-afb6.rherma26-a5b.workers.dev/get-api-key"
+      );
+      if (!keyResponse.ok) {
+        throw new Error("Failed to fetch API key from Cloudflare Worker.");
+      }
+      const { apiKey } = await keyResponse.json();
+
+      // Send the product data to OpenAI via the API key
+      const aiResponse = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-4o",
+            messages: [
+              {
+                role: "system",
+                content:
+                  "You are a friendly L'Oréal beauty advisor. Create a step-by-step beauty routine using the provided products. Make it clear, professional, and easy to follow.",
+              },
+              {
+                role: "user",
+                content: `Here are the selected products: ${productData
+                  .map((p) => `${p.name} (${p.brand})`)
+                  .join(", ")}. Please create a routine.`,
+              },
+            ],
+          }),
+        }
+      );
+
+      // Parse the AI response
+      const data = await aiResponse.json();
+
+      // Check for errors in the AI response
+      if (!aiResponse.ok) {
+        // If the response is not OK, throw an error with the API's error message
+        throw new Error(
+          data.error?.message ||
+            `API request failed with status ${aiResponse.status}`
+        );
+      }
+
+      // Verify the response structure before accessing the content
+      if (
+        !data.choices ||
+        !data.choices[0] ||
+        !data.choices[0].message ||
+        !data.choices[0].message.content
+      ) {
+        throw new Error("Invalid response structure from OpenAI API");
+      }
+
+      // Get the AI-generated routine
+      const aiRoutine = data.choices[0].message.content;
+
+      // Display the AI-generated routine in the chat window
+      addChatBubble(aiRoutine, "ai");
+    } catch (error) {
+      console.error("Error generating routine:", error);
+
+      // Show an error message in the chat window
+      addChatBubble(
+        "Sorry, I couldn't generate your routine. Please try again later.",
+        "ai"
+      );
+    } finally {
+      // Remove the loading message
+      loadingBubble.remove();
+    }
+  });
 }
 
-// Listen for category dropdown changes
-categoryFilter.addEventListener("change", (e) => {
-  const selectedCategory = e.target.value;
-  if (selectedCategory === "all") {
-    productGrid.innerHTML =
-      "<p class='empty-message'>Select a category to view products.</p>";
-  } else {
-    filterProducts(selectedCategory);
+/* ================================
+   PRODUCT GRID CLICK HANDLING
+================================ */
+productGrid.addEventListener("click", (e) => {
+  const card = e.target.closest(".product-card");
+  if (!card) return;
+
+  const id = Number(card.dataset.id);
+  const product = allProducts.find((p) => p.id === id);
+
+  if (!product) return;
+
+  if (e.target.classList.contains("more-info-btn")) {
+    toggleDescriptionBubble(card, product);
+    return;
+  }
+
+  // Single click = select product
+  if (!selectedProducts.some((p) => p.id === id)) {
+    selectedProducts.push(product);
+    updateSelectedProductsUI();
+    displayProducts();
   }
 });
 
-// Load products when the page loads
-loadProducts();
+/* ================================
+   DESCRIPTION BUBBLE
+================================ */
+function toggleDescriptionBubble(card, product) {
+  let existing = card.querySelector(".description-bubble");
 
-// Array to store conversation history for context
-const conversationHistory = [
-  {
-    role: "system",
-    content:
-      "You are Scott, a warm, friendly, and enthusiastic L'Oréal beauty advisor chatbot. When someone tells you their name, always greet them warmly using their name and introduce yourself as Scott. For example: 'Hi [Name]! I'm Scott, your L'Oréal beauty advisor! 💄✨' Remember their name throughout the conversation and use it occasionally to personalize responses. Your ONLY role is to help customers with L'Oréal products, skincare routines, makeup tips, and haircare recommendations. You must ONLY answer questions related to L'Oréal products, beauty, skincare, haircare, and makeup. If someone asks about ANY topic unrelated to L'Oréal or beauty (including other brands, politics, general knowledge, math, coding, or anything else), you must politely refuse by saying: 'I'm here to help with L'Oréal products and beauty advice. How can I assist you with your beauty needs today?' Do not answer off-topic questions under any circumstances. Keep all responses helpful, friendly, and under 100 words. Use encouraging phrases like 'Yass queen!', 'Slay!', 'You're serving looks!', 'Iconic!', 'Stunning!', 'Living for this!', 'Obsessed!', 'That's giving main character energy!', 'Werk it!' to make users feel fabulous and confident. When providing lists or recommendations, use clear formatting with bullet points. Use emojis throughout your responses to make them more engaging and friendly (💄 💅 ✨ 💖 🌟 😊 👍 🎉 💆‍♀️ 🧴 👑 🔥 etc.).",
-  },
-];
+  if (existing) {
+    existing.remove();
+    return;
+  }
 
-// Function to format AI response with HTML for better readability
-function formatAIMessage(message) {
-  // Replace **bold** with <strong>
-  let formatted = message.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-
-  // Replace bullet points (-, *, •) with proper HTML list items
-  formatted = formatted.replace(/^[\-\*•]\s+(.+)$/gm, "<li>$1</li>");
-
-  // Wrap consecutive list items in <ul> tags
-  formatted = formatted.replace(/(<li>.*<\/li>\s*)+/gs, "<ul>$&</ul>");
-
-  // Replace numbered lists (1. 2. 3.) with ordered list items
-  formatted = formatted.replace(/^\d+\.\s+(.+)$/gm, "<li>$1</li>");
-
-  // Wrap consecutive numbered items in <ol> tags
-  formatted = formatted.replace(/(<li>.*<\/li>\s*)+/gs, (match) => {
-    // Check if it's already wrapped in <ul>
-    if (match.includes("<ul>")) return match;
-    return "<ol>" + match + "</ol>";
-  });
-
-  // Replace line breaks with <br> tags
-  formatted = formatted.replace(/\n/g, "<br>");
-
-  return formatted;
+  const bubble = document.createElement("div");
+  bubble.className = "description-bubble";
 }
 
-// Set initial message with a bubble
-chatWindow.innerHTML = `<div class="msg-bubble ai-bubble">👋 Hello beautiful! You deserve the best beauty advice! I am here to help! </div>`;
-
-/* Handle form submit */
+/* ================================
+   CHATBOT LOGIC
+================================ */
 chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -174,34 +309,26 @@ chatForm.addEventListener("submit", async (e) => {
   const userMessage = userInput.value.trim();
   if (!userMessage) return;
 
+  // Add user's message to the chat window
+  addChatBubble(userMessage, "user");
+
   // Add user's message to conversation history
   conversationHistory.push({
     role: "user",
     content: userMessage,
   });
 
-  // Create and display user's message bubble
-  const userBubble = document.createElement("div");
-  userBubble.className = "msg-bubble user-bubble";
-  userBubble.textContent = userMessage;
-  chatWindow.appendChild(userBubble);
-
-  // Clear input field
+  // Clear the input field
   userInput.value = "";
 
-  // Show typing indicator while waiting for AI response
-  const loadingBubble = document.createElement("div");
-  loadingBubble.className = "msg-bubble ai-bubble loading";
-  loadingBubble.innerHTML =
-    '<span class="typing-indicator"><span></span><span></span><span></span></span>';
-  chatWindow.appendChild(loadingBubble);
-
-  // Scroll to bottom of chat
-  chatWindow.scrollTop = chatWindow.scrollHeight;
+  // Show a typing indicator while waiting for the AI response
+  const loadingBubble = addChatBubble(
+    '<span class="typing-indicator"><span></span><span></span><span></span></span>',
+    "ai"
+  );
 
   try {
-    // Make API request through Cloudflare Worker
-    // Send the entire conversation history for context
+    // Send the messages array to the Cloudflare Worker
     const response = await fetch(
       "https://round-hill-afb6.rherma26-a5b.workers.dev/",
       {
@@ -210,7 +337,7 @@ chatForm.addEventListener("submit", async (e) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          messages: conversationHistory, // Send full conversation history
+          messages: conversationHistory, // Send the full conversation history
         }),
       }
     );
@@ -218,164 +345,62 @@ chatForm.addEventListener("submit", async (e) => {
     // Parse the response
     const data = await response.json();
 
-    // Check for errors
+    // Check for errors in the AI response
     if (!response.ok) {
-      throw new Error(data.error?.message || "API request failed");
+      throw new Error(
+        data.error?.message ||
+          `API request failed with status ${response.status}`
+      );
     }
 
-    // Get AI's response from the data
+    // Verify the response structure before accessing the content
+    if (
+      !data.choices ||
+      !data.choices[0] ||
+      !data.choices[0].message ||
+      !data.choices[0].message.content
+    ) {
+      throw new Error("Invalid response structure from OpenAI API");
+    }
+
+    // Extract the AI's response using data.choices[0].message.content
     const aiMessage = data.choices[0].message.content;
 
-    // Add AI's response to conversation history
+    // Add the AI's response to the chat window
+    addChatBubble(aiMessage, "ai");
+
+    // Add the AI's response to the conversation history
     conversationHistory.push({
       role: "assistant",
       content: aiMessage,
     });
-
-    // Remove loading bubble and display AI response bubble
-    loadingBubble.remove();
-    const aiBubble = document.createElement("div");
-    aiBubble.className = "msg-bubble ai-bubble";
-    // Use innerHTML to display formatted content with HTML tags
-    aiBubble.innerHTML = formatAIMessage(aiMessage);
-    chatWindow.appendChild(aiBubble);
   } catch (error) {
-    // Display error message in a bubble
+    console.error("Error communicating with the AI:", error);
+
+    // Show an error message in the chat window
+    addChatBubble(
+      "Sorry, I couldn't process your request. Please try again later.",
+      "ai"
+    );
+  } finally {
+    // Remove the typing indicator
     loadingBubble.remove();
-    const errorBubble = document.createElement("div");
-    errorBubble.className = "msg-bubble ai-bubble error";
-    errorBubble.textContent = `Sorry, there was an error: ${error.message}`;
-    chatWindow.appendChild(errorBubble);
-    console.error("Error details:", error);
-  }
-
-  // Scroll to bottom of chat
-  chatWindow.scrollTop = chatWindow.scrollHeight;
-});
-
-// Placeholder: Array to store selected products
-let selectedProducts = [];
-
-// Product selection: move to selected section and hide from grid
-productGrid.addEventListener("click", (e) => {
-  const card = e.target.closest(".product-card");
-  if (!card) return;
-  const productId = Number(card.dataset.id);
-  const product = allProducts.find((p) => p.id === productId);
-  if (!product) return;
-  // Add to selected if not already there
-  if (!selectedProducts.some((p) => p.id === productId)) {
-    selectedProducts.push(product);
-    // After selection, re-filter to hide selected product and keep others hidden
-    filterProducts(categoryFilter.value);
-    updateSelectedProductsUI();
   }
 });
 
-// Clear all selected products
-clearSelectedBtn.addEventListener("click", () => {
-  // Remove all selected products
-  selectedProducts = [];
-  // Show all products again for the selected category
-  filterProducts(categoryFilter.value);
-  // Update selected products UI
-  updateSelectedProductsUI();
-});
+/* ================================
+   HELPER: ADD CHAT BUBBLE
+================================ */
+function addChatBubble(message, sender) {
+  const bubble = document.createElement("div");
+  bubble.className = `msg-bubble ${
+    sender === "user" ? "user-bubble" : "ai-bubble"
+  }`;
+  bubble.innerHTML = message;
+  chatWindow.appendChild(bubble);
 
-// Generate routine and display in chat window
-generateRoutineBtn.addEventListener("click", async () => {
-  // If no products selected, show a message
-  if (selectedProducts.length === 0) {
-    const routineBubble = document.createElement("div");
-    routineBubble.className = "msg-bubble ai-bubble";
-    routineBubble.textContent =
-      "Please select at least one product to generate your routine!";
-    chatWindow.appendChild(routineBubble);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-    return;
-  }
-
-  // Prepare the data to send to the OpenAI API
-  const productData = selectedProducts.map((product) => ({
-    name: product.name,
-    brand: product.brand,
-    category: product.category,
-    description: product.description,
-  }));
-
-  // Add a loading bubble to indicate the routine is being generated
-  const loadingBubble = document.createElement("div");
-  loadingBubble.className = "msg-bubble ai-bubble loading";
-  loadingBubble.innerHTML =
-    '<span class="typing-indicator"><span></span><span></span><span></span></span>';
-  chatWindow.appendChild(loadingBubble);
+  // Scroll to the bottom of the chat window
   chatWindow.scrollTop = chatWindow.scrollHeight;
 
-  try {
-    // Make the API request to OpenAI
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer YOUR_OPENAI_API_KEY`, // Replace with your OpenAI API key
-      },
-      body: JSON.stringify({
-        model: "gpt-4o",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are Scott, a friendly L'Oréal beauty advisor. Generate a skincare, makeup, or haircare routine based on the provided products. Keep the routine clear, concise, and under 100 words.",
-          },
-          {
-            role: "user",
-            content: `Here are the selected products: ${JSON.stringify(
-              productData
-            )}. Please create a routine.`,
-          },
-        ],
-      }),
-    });
-
-    // Parse the response
-    const data = await response.json();
-
-    // Check for errors
-    if (!response.ok) {
-      throw new Error(data.error?.message || "Failed to generate routine.");
-    }
-
-    // Get the AI-generated routine
-    const aiRoutine = data.choices[0].message.content;
-
-    // Remove the loading bubble
-    loadingBubble.remove();
-
-    // Display the AI-generated routine in the chat window
-    const routineBubble = document.createElement("div");
-    routineBubble.className = "msg-bubble ai-bubble";
-    routineBubble.innerHTML = aiRoutine;
-    chatWindow.appendChild(routineBubble);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  } catch (error) {
-    // Remove the loading bubble
-    loadingBubble.remove();
-
-    // Display an error message in the chat window
-    const errorBubble = document.createElement("div");
-    errorBubble.className = "msg-bubble ai-bubble error";
-    errorBubble.textContent = `Sorry, there was an error generating your routine: ${error.message}`;
-    chatWindow.appendChild(errorBubble);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-    console.error("Error generating routine:", error);
-  }
-});
-
-// Placeholder: Continue conversation in chat window based on selections
-function continueConversationWithSelection() {
-  // Students: Add logic to send selected products or routine info
-  // as a message to the chatbot, and get a personalized response
-  // Example:
-  // const userMessage = `Can you recommend a routine using these products: ${selectedProducts.map(p => p.name).join(", ")}?`;
-  // // Add to conversationHistory and trigger chat as usual
+  return bubble;
 }

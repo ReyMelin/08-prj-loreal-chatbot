@@ -1,117 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="img/Loreal.png" type="image/webp" />
-    <title>Chat Assistant</title>
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="img/Loreal.png" type="image/webp" />
+  <title>Smart Beauty Advisor</title>
 
-  <body>
-    <div class="page-wrapper">
-      <!------- Header / Branding ------->
-      <header class="site-header">
-        <img src="img/loreal-logo.png" alt="L'Oréal Logo" class="site-logo" />
-        <h1 class="site-title">Smart Beauty Advisor</h1>
-      </header>
+  <!-- Google Icons + Fonts -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet" />
 
-      <!------- Product Browse Section ------->
-      <section class="product-section">
-        <div class="product-controls">
-          <h2>Browse Our Products</h2>
-          <label for="categoryFilter" class="visually-hidden"
-            >Filter by category</label
-          >
-          <select id="categoryFilter" class="category-dropdown">
-            <option value="all">-------</option>
-            <option value="cleanser">Cleansers</option>
-            <option value="moisturizer">Moisturizers</option>
-            <option value="skincare">Skincare</option>
-            <option value="makeup">Makeup</option>
-            <option value="haircare">Haircare</option>
-            <option value="hair color">Hair Color</option>
-            <option value="hair styling">Hair Styling</option>
-            <option value="men's grooming">Men's Grooming</option>
-            <option value="suncare">Suncare</option>
-            <option value="fragrance">Fragrance</option>
-          </select>
-        </div>
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-        <!-- Product Grid -->
-        <div id="productGrid" class="product-grid">
-          <!-- Products will be loaded here via JavaScript -->
-        </div>
-      </section>
+<body>
+  <div class="page-wrapper">
 
-      <!------- Selected Products Section ------->
-      <section class="selected-section">
-        <h2>Your Selected Products</h2>
-        <div id="selectedProducts" class="selected-products">
-          <p class="empty-message">
-            No products selected yet. Click on products above to add them!
-          </p>
-        </div>
-        <div class="selected-actions">
-          <button id="generateRoutineBtn" class="routine-btn">
-            Generate Routine with My Products
+    <!-- HEADER -->
+    <header class="site-header">
+      <img src="img/loreal-logo.png" alt="L'Oréal Logo" class="site-logo" />
+      <h1 class="site-title">Smart Beauty Advisor</h1>
+    </header>
+
+    <!-- PRODUCT BROWSING -->
+    <section class="product-section">
+      <div class="product-controls">
+        <h2>Browse Our Products</h2>
+
+        <label for="categoryFilter" class="visually-hidden">Filter by Category</label>
+        <select id="categoryFilter" class="category-dropdown">
+          <option value="all">All Categories</option>
+          <option value="cleanser">Cleansers</option>
+          <option value="moisturizer">Moisturizers</option>
+          <option value="skincare">Skincare</option>
+          <option value="makeup">Makeup</option>
+          <option value="haircare">Haircare</option>
+          <option value="hair color">Hair Color</option>
+          <option value="hair styling">Hair Styling</option>
+          <option value="men's grooming">Men's Grooming</option>
+          <option value="suncare">Suncare</option>
+          <option value="fragrance">Fragrance</option>
+        </select>
+      </div>
+
+      <!-- JS injects cards -->
+      <div id="productGrid" class="product-grid"></div>
+    </section>
+
+    <!-- SELECTED PRODUCTS -->
+    <section class="selected-section">
+      <h2>Your Selected Products</h2>
+
+      <div id="selectedProducts" class="selected-products">
+        <p class="empty-message">No products selected yet. Tap any product to add it!</p>
+      </div>
+
+      <div class="selected-actions">
+      <button class="routine-btn" id="routineBtn">Generate Routine</button>
+        <button id="clearSelectedBtn" class="clear-btn">Clear All</button>
+      </div>
+    </section>
+
+    <!-- CHAT AREA -->
+    <main>
+      <section class="chatbox">
+        <div id="chatWindow" class="chat-window"></div>
+
+        <form id="chatForm" class="chat-form">
+          <label for="userInput" class="visually-hidden">Message</label>
+          <input 
+            id="userInput" 
+            name="userInput" 
+            type="text" 
+            placeholder="Ask about products or build a custom routine…" 
+            autocomplete="off" 
+            required 
+          />
+          <button type="submit" id="sendBtn">
+            <span class="material-icons">send</span>
           </button>
-          <button
-            id="clearSelectedBtn"
-            class="clear-btn"
-            title="Clear All Selected Products"
-          >
-            Clear All
-          </button>
-        </div>
+        </form>
       </section>
+    </main>
 
-      <!------- Chat Area ------->
-      <main>
-        <section class="chatbox">
-          <div id="chatWindow" class="chat-window">
-            <!-- messages will be appended here via JS -->
-          </div>
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <p>&copy; 2025 L’Oréal. All rights reserved.</p>
+      <nav>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Contact</a>
+      </nav>
+    </footer>
 
-          <form id="chatForm" class="chat-form">
-            <label for="userInput" class="visually-hidden">Message</label>
-            <input
-              id="userInput"
-              name="userInput"
-              type="text"
-              placeholder="Ask me about products or routines…"
-              autocomplete="off"
-              required
-            />
-            <button type="submit" id="sendBtn">
-              <span class="material-icons">send</span>
-              <span class="visually-hidden">Send</span>
-            </button>
-          </form>
-        </section>
-      </main>
+  </div>
 
-      <!------- Footer Links ------->
-      <footer class="site-footer">
-        <p>&copy; 2025 Company Name. All rights reserved.</p>
-        <nav>
-          <!-- These URLs are placeholders -->
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Use</a>
-          <a href="#">Contact</a>
-        </nav>
-      </footer>
-    </div>
-
-    <!-- Script for chat functionality -->
-    <script src="script.js"></script>
-  </body>
+  <script src="script.js"></script>
+</body>
 </html>
