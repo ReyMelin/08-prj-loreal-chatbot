@@ -169,67 +169,61 @@ if (generateRoutineBtn) {
       description: product.description,
     }));
 
-    console.log("Selected Products:", selectedProducts);
-    console.log("Product Data:", productData);
-    console.log("Fetching API key from Cloudflare...");
-
     // Add a loading message to the chat window
     const loadingBubble = addChatBubble(
-      "<em>Creating your personalized beauty routine…</em>",
+      '<span class="typing-indicator"><span></span><span></span><span></span></span>',
       "ai"
     );
 
     try {
-      // Fetch the OpenAI API key from Cloudflare
-      const keyResponse = await fetch(
-        "https://round-hill-afb6.rherma26-a5b.workers.dev/get-api-key"
-      );
-      if (!keyResponse.ok) {
-        throw new Error("Failed to fetch API key from Cloudflare Worker.");
-      }
-      const { apiKey } = await keyResponse.json();
+      // Create a special message for generating the routine
+      const routineMessages = [
+        {
+          role: "system",
+          content:
+            "You are a friendly L'Oréal beauty advisor named Scott. Create a step-by-step daily beauty routine using ONLY the provided products. Make it clear, professional, and easy to follow. Include the order of application and when to use each product (morning/night). Tailor recommendations based on their key functions. Use emojis and encouraging phrases to make it engaging.",
+        },
+        {
+          role: "user",
+          content: `Using the following selected L'Oréal products, suggest a daily beauty routine. Tailor recommendations based on their key functions:\n\n${productData
+            .map(
+              (p, index) =>
+                `${index + 1}. **${p.name}** by ${p.brand}\n   - Category: ${
+                  p.category
+                }\n   - Description: ${p.description}`
+            )
+            .join(
+              "\n\n"
+            )}\n\nPlease create a personalized daily beauty routine using these products.`,
+        },
+      ];
 
-      // Send the product data to OpenAI via the API key
-      const aiResponse = await fetch(
-        "https://api.openai.com/v1/chat/completions",
+      // Send the routine request to Cloudflare Worker
+      const response = await fetch(
+        "https://round-hill-afb6.rherma26-a5b.workers.dev/",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
           },
           body: JSON.stringify({
-            model: "gpt-4o",
-            messages: [
-              {
-                role: "system",
-                content:
-                  "You are a friendly L'Oréal beauty advisor. Create a step-by-step beauty routine using the provided products. Make it clear, professional, and easy to follow.",
-              },
-              {
-                role: "user",
-                content: `Here are the selected products: ${productData
-                  .map((p) => `${p.name} (${p.brand})`)
-                  .join(", ")}. Please create a routine.`,
-              },
-            ],
+            messages: routineMessages, // Send routine-specific messages
           }),
         }
       );
 
-      // Parse the AI response
-      const data = await aiResponse.json();
+      // Parse the response
+      const data = await response.json();
 
       // Check for errors in the AI response
-      if (!aiResponse.ok) {
-        // If the response is not OK, throw an error with the API's error message
+      if (!response.ok) {
         throw new Error(
           data.error?.message ||
-            `API request failed with status ${aiResponse.status}`
+            `API request failed with status ${response.status}`
         );
       }
 
-      // Verify the response structure before accessing the content
+      // Verify the response structure
       if (
         !data.choices ||
         !data.choices[0] ||
@@ -244,6 +238,16 @@ if (generateRoutineBtn) {
 
       // Display the AI-generated routine in the chat window
       addChatBubble(aiRoutine, "ai");
+
+      // Add to conversation history so user can ask follow-up questions
+      conversationHistory.push({
+        role: "user",
+        content: "Please create a routine with my selected products.",
+      });
+      conversationHistory.push({
+        role: "assistant",
+        content: aiRoutine,
+      });
     } catch (error) {
       console.error("Error generating routine:", error);
 
@@ -288,15 +292,53 @@ productGrid.addEventListener("click", (e) => {
    DESCRIPTION BUBBLE
 ================================ */
 function toggleDescriptionBubble(card, product) {
-  let existing = card.querySelector(".description-bubble");
+  // Check if a modal already exists on the page
+  let existingModal = document.querySelector(".product-modal");
 
-  if (existing) {
-    existing.remove();
+  if (existingModal) {
+    // Remove existing modal if user clicks info button again
+    existingModal.remove();
     return;
   }
 
-  const bubble = document.createElement("div");
-  bubble.className = "description-bubble";
+  // Create a modal overlay
+  const modal = document.createElement("div");
+  modal.className = "product-modal";
+
+  // Create modal content
+  modal.innerHTML = `
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <img src="${product.image}" alt="${product.name}" class="modal-image" />
+      <h3>${product.name}</h3>
+      <p class="modal-brand">${product.brand}</p>
+      <p class="modal-category">${product.category}</p>
+      <p class="modal-description">${product.description}</p>
+    </div>
+  `;
+
+  // Append modal to body
+  document.body.appendChild(modal);
+
+  // Close modal when clicking the X button
+  modal.querySelector(".modal-close").addEventListener("click", () => {
+    modal.remove();
+  });
+
+  // Close modal when clicking outside the content
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.remove();
+    }
+  });
+
+  // Close modal with Escape key
+  document.addEventListener("keydown", function closeOnEscape(e) {
+    if (e.key === "Escape") {
+      modal.remove();
+      document.removeEventListener("keydown", closeOnEscape);
+    }
+  });
 }
 
 /* ================================
