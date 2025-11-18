@@ -61,6 +61,7 @@ body {
   color: var(--text);
   background: linear-gradient(180deg, var(--bg) 0%, #fff 100%);
   -webkit-font-variant-ligatures: contextual;
+  font-variant-ligatures: contextual;
   display: flex;
   justify-content: center;
   line-height: 1.45;
