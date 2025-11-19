@@ -7,14 +7,16 @@ const chatWindow = document.getElementById("chatWindow");
 const productGrid = document.getElementById("productGrid");
 const categoryFilter = document.getElementById("categoryFilter");
 const selectedProductsDiv = document.getElementById("selectedProducts");
-const generateRoutineBtn = document.getElementById("generateRoutineBtn");
+const generateRoutineBtn = document.getElementById("generateRoutineBtn"); // Make sure this matches your HTML!
 const clearSelectedBtn = document.getElementById("clearSelectedBtn");
 
 /* ================================
    STATE
 ================================ */
 let allProducts = [];
-let selectedProducts = [];
+// Load selected products from localStorage on page load
+let selectedProducts =
+  JSON.parse(localStorage.getItem("selectedProducts")) || [];
 
 let conversationHistory = [
   {
@@ -38,6 +40,11 @@ async function loadProducts() {
 
     // Display products in the grid
     displayProducts();
+
+    // Display selected products from localStorage if any exist
+    if (selectedProducts.length > 0) {
+      updateSelectedProductsUI();
+    }
   } catch (err) {
     console.error("Error loading products:", err);
 
@@ -83,12 +90,18 @@ function updateSelectedProductsUI() {
 
     selectedProductsDiv.appendChild(tag);
   });
+
+  // Save to localStorage whenever UI updates
+  localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
 }
 
 function removeSelectedProduct(id) {
   selectedProducts = selectedProducts.filter((p) => p.id !== id);
   updateSelectedProductsUI();
   displayProducts();
+
+  // Save to localStorage after removal
+  localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
 }
 
 /* ================================
@@ -145,21 +158,32 @@ clearSelectedBtn.addEventListener("click", () => {
   selectedProducts = [];
   updateSelectedProductsUI();
   displayProducts();
+
+  // Clear from localStorage when clearing all
+  localStorage.removeItem("selectedProducts");
 });
 
 /* ================================
    EVENT: GENERATE ROUTINE
 ================================ */
 if (generateRoutineBtn) {
+  console.log("✅ Generate Routine button found!"); // Debug log
+
   generateRoutineBtn.addEventListener("click", async () => {
+    console.log("🔥 Button clicked!"); // Debug log
+    console.log("Selected products:", selectedProducts); // Debug log
+
     // Collect selected products
     if (selectedProducts.length === 0) {
+      console.log("❌ No products selected"); // Debug log
       addChatBubble(
         "Please select at least one product to generate your routine!",
         "ai"
       );
       return;
     }
+
+    console.log("✅ Products found, preparing data..."); // Debug log
 
     // Prepare product data to send to the API
     const productData = selectedProducts.map((product) => ({
@@ -168,6 +192,8 @@ if (generateRoutineBtn) {
       category: product.category,
       description: product.description,
     }));
+
+    console.log("Product data:", productData); // Debug log
 
     // Add a loading message to the chat window
     const loadingBubble = addChatBubble(
@@ -181,7 +207,7 @@ if (generateRoutineBtn) {
         {
           role: "system",
           content:
-            "You are a friendly L'Oréal beauty advisor named Scott. Create a step-by-step daily beauty routine using ONLY the provided products. Make it clear, professional, and easy to follow. Include the order of application and when to use each product (morning/night). Tailor recommendations based on their key functions. Use emojis and encouraging phrases to make it engaging.",
+            "You are Scott, a friendly L'Oréal beauty advisor. Create a step-by-step daily beauty routine using ONLY the provided products. Make it clear, professional, and easy to follow. Include the order of application and when to use each product (morning/night). Tailor recommendations based on their key functions. Use emojis and encouraging phrases to make it engaging.",
         },
         {
           role: "user",
@@ -239,15 +265,20 @@ if (generateRoutineBtn) {
       // Display the AI-generated routine in the chat window
       addChatBubble(aiRoutine, "ai");
 
-      // Add to conversation history so user can ask follow-up questions
+      // Add the routine request and response to conversation history
+      // This allows the chatbot to remember the routine for follow-up questions
       conversationHistory.push({
         role: "user",
-        content: "Please create a routine with my selected products.",
+        content: `Using the following selected L'Oréal products, suggest a daily beauty routine:\n\n${productData
+          .map((p) => `- ${p.name} by ${p.brand} (${p.category})`)
+          .join("\n")}`,
       });
       conversationHistory.push({
         role: "assistant",
         content: aiRoutine,
       });
+
+      console.log("✅ Routine added to conversation history"); // Debug log
     } catch (error) {
       console.error("Error generating routine:", error);
 
@@ -261,6 +292,8 @@ if (generateRoutineBtn) {
       loadingBubble.remove();
     }
   });
+} else {
+  console.error("❌ Generate Routine button NOT found in DOM!"); // Debug log
 }
 
 /* ================================
@@ -285,6 +318,9 @@ productGrid.addEventListener("click", (e) => {
     selectedProducts.push(product);
     updateSelectedProductsUI();
     displayProducts();
+
+    // Save to localStorage after adding product
+    localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
   }
 });
 

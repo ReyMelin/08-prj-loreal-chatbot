@@ -1,100 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" href="img/Loreal.png" type="image/webp" />
-  <title>Smart Beauty Advisor</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="img/Loreal.png" type="image/webp" />
+    <title>Smart Beauty Advisor</title>
 
-  <!-- Google Icons + Fonts -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet" />
+    <!-- Google Icons + Fonts -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <link rel="stylesheet" href="style.css" />
-</head>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<body>
-  <div class="page-wrapper">
+  <body>
+    <div class="page-wrapper">
+      <!-- HEADER -->
+      <header class="site-header">
+        <img src="img/loreal-logo.png" alt="L'Oréal Logo" class="site-logo" />
+        <h1 class="site-title">Smart Beauty Advisor</h1>
+      </header>
 
-    <!-- HEADER -->
-    <header class="site-header">
-      <img src="img/loreal-logo.png" alt="L'Oréal Logo" class="site-logo" />
-      <h1 class="site-title">Smart Beauty Advisor</h1>
-    </header>
+      <!-- PRODUCT BROWSING -->
+      <section class="product-section">
+        <div class="product-controls">
+          <h2>Browse Our Products</h2>
 
-    <!-- PRODUCT BROWSING -->
-    <section class="product-section">
-      <div class="product-controls">
-        <h2>Browse Our Products</h2>
+          <label for="categoryFilter" class="visually-hidden"
+            >Filter by Category</label
+          >
+          <select id="categoryFilter" class="category-dropdown">
+            <option value="all">All Categories</option>
+            <option value="cleanser">Cleansers</option>
+            <option value="moisturizer">Moisturizers</option>
+            <option value="skincare">Skincare</option>
+            <option value="makeup">Makeup</option>
+            <option value="haircare">Haircare</option>
+            <option value="hair color">Hair Color</option>
+            <option value="hair styling">Hair Styling</option>
+            <option value="men's grooming">Men's Grooming</option>
+            <option value="suncare">Suncare</option>
+            <option value="fragrance">Fragrance</option>
+          </select>
+        </div>
 
-        <label for="categoryFilter" class="visually-hidden">Filter by Category</label>
-        <select id="categoryFilter" class="category-dropdown">
-          <option value="all">All Categories</option>
-          <option value="cleanser">Cleansers</option>
-          <option value="moisturizer">Moisturizers</option>
-          <option value="skincare">Skincare</option>
-          <option value="makeup">Makeup</option>
-          <option value="haircare">Haircare</option>
-          <option value="hair color">Hair Color</option>
-          <option value="hair styling">Hair Styling</option>
-          <option value="men's grooming">Men's Grooming</option>
-          <option value="suncare">Suncare</option>
-          <option value="fragrance">Fragrance</option>
-        </select>
-      </div>
-
-      <!-- JS injects cards -->
-      <div id="productGrid" class="product-grid"></div>
-    </section>
-
-    <!-- SELECTED PRODUCTS -->
-    <section class="selected-section">
-      <h2>Your Selected Products</h2>
-
-      <div id="selectedProducts" class="selected-products">
-        <p class="empty-message">No products selected yet. Tap any product to add it!</p>
-      </div>
-
-      <div class="selected-actions">
-      <button class="routine-btn" id="routineBtn">Generate Routine</button>
-        <button id="clearSelectedBtn" class="clear-btn">Clear All</button>
-      </div>
-    </section>
-
-    <!-- CHAT AREA -->
-    <main>
-      <section class="chatbox">
-        <div id="chatWindow" class="chat-window"></div>
-
-        <form id="chatForm" class="chat-form">
-          <label for="userInput" class="visually-hidden">Message</label>
-          <input 
-            id="userInput" 
-            name="userInput" 
-            type="text" 
-            placeholder="Ask about products or build a custom routine…" 
-            autocomplete="off" 
-            required 
-          />
-          <button type="submit" id="sendBtn">
-            <span class="material-icons">send</span>
-          </button>
-        </form>
+        <!-- JS injects cards -->
+        <div id="productGrid" class="product-grid"></div>
       </section>
-    </main>
 
-    <!-- FOOTER -->
-    <footer class="site-footer">
-      <p>&copy; 2025 L’Oréal. All rights reserved.</p>
-      <nav>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Use</a>
-        <a href="#">Contact</a>
-      </nav>
-    </footer>
+      <!-- SELECTED PRODUCTS -->
+      <section class="selected-section">
+        <h2>Your Selected Products</h2>
 
-  </div>
+        <div id="selectedProducts" class="selected-products">
+          <p class="empty-message">
+            No products selected yet. Tap any product to add it!
+          </p>
+        </div>
 
-  <script src="script.js"></script>
-</body>
+        <div class="selected-actions">
+          <button class="routine-btn" id="generateRoutineBtn">
+            Generate Routine
+          </button>
+          <button id="clearSelectedBtn" class="clear-btn">Clear All</button>
+        </div>
+      </section>
+
+      <!-- CHAT AREA -->
+      <main>
+        <section class="chatbox">
+          <div id="chatWindow" class="chat-window"></div>
+
+          <form id="chatForm" class="chat-form">
+            <label for="userInput" class="visually-hidden">Message</label>
+            <input
+              id="userInput"
+              name="userInput"
+              type="text"
+              placeholder="Ask about products or build a custom routine…"
+              autocomplete="off"
+              required
+            />
+            <button type="submit" id="sendBtn">
+              <span class="material-icons">send</span>
+            </button>
+          </form>
+        </section>
+      </main>
+
+      <!-- FOOTER -->
+      <footer class="site-footer">
+        <p>&copy; 2025 L’Oréal. All rights reserved.</p>
+        <nav>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Contact</a>
+        </nav>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
 </html>

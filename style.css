@@ -96,7 +96,7 @@ body {
   gap: var(--space-md);
   margin-bottom: var(--space-lg);
   padding-bottom: var(--space-sm);
-  border-bottom: 2px solid var(--accent-gold);
+  border-bottom: 1px solid var(--accent-gold);
 }
 
 .site-logo {
@@ -222,7 +222,7 @@ body {
 
 /* Selected product look */
 .product-card.selected {
-  border: 2px solid var(--accent-gold);
+  border: 1px solid var(--accent-gold);
   background: var(--panel-bg);
   box-shadow: 0 0 0 3px rgba(227, 165, 53, 0.15);
   transform: translateY(-4px);
@@ -236,7 +236,7 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 999px;
-  border: 2px solid var(--accent-gold);
+  border: 1px solid var(--accent-gold);
   color: var(--accent-gold);
   font-weight: 700;
   display: inline-grid;
@@ -264,7 +264,7 @@ body {
   bottom: calc(100% + 10px);
   width: min(320px, 88%);
   background: var(--bg);
-  border: 2px solid var(--accent-gold);
+  border: 1px solid var(--accent-gold);
   border-radius: 10px;
   padding: 0.85rem;
   box-shadow: 0 12px 36px rgba(18, 18, 18, 0.08);
@@ -293,7 +293,7 @@ body {
   background: var(--bg);
   padding: var(--space-md);
   border-radius: var(--radius-md);
-  border: 2px solid var(--accent-gold);
+  border: 1px solid var(--accent-gold);
   box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
@@ -340,7 +340,7 @@ body {
 
 .selected-product-tag .remove-btn {
   background: transparent;
-  border: 2px solid var(--accent-red);
+  border: 1px solid var(--accent-red);
   color: var(--accent-red);
   height: 22px;
   width: 22px;
@@ -364,9 +364,10 @@ body {
   margin-top: var(--space-sm);
 }
 
-.routine-btn {
+/* Change from class .generateRoutineBtn to ID #generateRoutineBtn */
+#generateRoutineBtn {
   background: transparent;
-  border: 2px solid var(--accent-gold);
+  border: 1px solid var(--accent-gold);
   color: var(--accent-gold);
   padding: 0.6rem 0.9rem;
   border-radius: 8px;
@@ -376,14 +377,14 @@ body {
   transition: transform 160ms ease, background 160ms ease;
 }
 
-.routine-btn:hover {
+#generateRoutineBtn:hover {
   background: var(--accent-gold);
   color: #ffffff;
 }
 
 .clear-btn {
   background: transparent;
-  border: 2px solid var(--accent-red);
+  border: 1px solid var(--accent-red);
   color: var(--accent-red);
   padding: 0.45rem 0.7rem;
   border-radius: 8px;
@@ -439,14 +440,14 @@ body {
   align-self: flex-end;
   background: var(--panel-bg);
   color: var(--text);
-  border: 2px solid var(--accent-red);
+  border: 1px solid var(--accent-red);
 }
 
 .ai-bubble {
   align-self: flex-start;
   background: var(--panel-bg);
   color: var(--text);
-  border: 2px solid var(--accent-gold);
+  border: 1px solid var(--accent-gold);
 }
 
 /* list styling inside ai bubble */
@@ -494,7 +495,7 @@ body {
 .ai-bubble.error {
   background: var(--panel-bg);
   color: var(--accent-red);
-  border: 2px solid var(--accent-red);
+  border: 1px solid var(--accent-red);
 }
 
 /* Chat form (input row) */
@@ -524,7 +525,7 @@ body {
   height: 44px;
   min-width: 44px;
   border-radius: 8px;
-  border: 2px solid var(--accent-red);
+  border: 1px solid var(--accent-red);
   color: var(--accent-red);
   cursor: pointer;
   display: grid;
@@ -593,7 +594,7 @@ body {
 
 .modal-content {
   background: var(--bg);
-  border: 2px solid var(--accent-gold);
+  border: 1px solid var(--accent-gold);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
   max-width: 500px;
@@ -621,7 +622,7 @@ body {
   top: 12px;
   right: 12px;
   background: transparent;
-  border: 2px solid var(--accent-red);
+  border: 1px solid var(--accent-red);
   color: var(--accent-red);
   width: 32px;
   height: 32px;
