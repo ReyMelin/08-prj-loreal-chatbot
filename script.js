@@ -13,6 +13,7 @@ const generateRoutineBtn = document.getElementById("generateRoutineBtn");
 const clearSelectedBtn = document.getElementById("clearSelectedBtn");
 const loadingScreen = document.getElementById("loadingScreen");
 const mainContent = document.getElementById("mainContent");
+const toggleButtons = document.querySelectorAll(".toggle-section-btn");
 
 /* ================================
    STATE
@@ -664,6 +665,37 @@ chatForm.addEventListener("submit", async (e) => {
     // Remove the typing indicator
     loadingBubble.remove();
   }
+});
+
+/* ================================
+   SECTION TOGGLE FUNCTIONALITY
+================================ */
+// Add click event listeners to all toggle buttons
+toggleButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    // Find the parent section
+    const section = button.closest("section");
+
+    // Find the content to toggle
+    const content = section.querySelector(".section-content");
+
+    if (!content) return;
+
+    // Toggle the collapsed state
+    const isCollapsed = content.classList.contains("collapsed");
+
+    if (isCollapsed) {
+      // Expand the section
+      content.classList.remove("collapsed");
+      button.textContent = "−"; // Change to minus sign
+      button.setAttribute("aria-label", `Hide ${section.className} section`);
+    } else {
+      // Collapse the section
+      content.classList.add("collapsed");
+      button.textContent = "+"; // Change to plus sign
+      button.setAttribute("aria-label", `Show ${section.className} section`);
+    }
+  });
 });
 
 /* ================================

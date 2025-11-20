@@ -174,6 +174,60 @@ body {
 }
 
 /* -------------------------
+   SECTION TOGGLE BUTTON
+   ------------------------- */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-md);
+  width: 100%;
+}
+
+.toggle-section-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-gold);
+  background: var(--bg);
+  color: var(--accent-gold);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  padding: 0;
+  font-weight: 300;
+}
+
+.toggle-section-btn:hover {
+  background: var(--accent-gold);
+  color: var(--bg);
+  transform: scale(1.1);
+}
+
+.toggle-section-btn:focus {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+/* Section content that can be collapsed */
+.section-content {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+}
+
+.section-content.collapsed {
+  max-height: 0 !important;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* -------------------------
    PRODUCT BROWSE (LEFT COLUMN)
    ------------------------- */
 .product-section {
@@ -191,7 +245,7 @@ body {
   flex-direction: column;
   gap: var(--space-md);
   align-items: center;
-  margin-bottom: var(--space-lg);
+  margin-bottom: 0; /* Remove margin since section-header handles spacing */
   flex-wrap: wrap;
 }
 
@@ -427,6 +481,7 @@ body {
   font-size: 1rem;
   margin: 0;
   font-weight: 700;
+  flex: 1; /* Allow h2 to take available space */
 }
 
 .selected-products {

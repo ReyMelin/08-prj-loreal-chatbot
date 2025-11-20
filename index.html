@@ -35,80 +35,102 @@
 
       <!-- PRODUCT BROWSING -->
       <section class="product-section">
-        <div class="product-controls">
-          <h2>Browse Our Products</h2>
+        <div class="section-header">
+          <div class="product-controls">
+            <h2>Browse Our Products</h2>
 
-          <div class="filter-group">
-            <div class="search-wrapper">
-              <label for="searchInput" class="visually-hidden"
-                >Search Products</label
-              >
-              <input
-                type="text"
-                id="searchInput"
-                class="search-input"
-                placeholder="Search products..."
-                autocomplete="off"
-              />
-              <!-- Dropdown suggestions -->
-              <div id="searchSuggestions" class="search-suggestions hidden">
-                <div class="suggestion-item" data-keyword="CeraVe">CeraVe</div>
-                <div class="suggestion-item" data-keyword="retinol">
-                  Retinol
-                </div>
-                <div class="suggestion-item" data-keyword="radiance">
-                  Radiance
-                </div>
-                <div class="suggestion-item" data-keyword="moisturizer">
-                  Moisturizer
-                </div>
-                <div class="suggestion-item" data-keyword="vitamin C">
-                  Vitamin C
-                </div>
-                <div class="suggestion-item" data-keyword="hyaluronic">
-                  Hyaluronic Acid
+            <div class="filter-group">
+              <div class="search-wrapper">
+                <label for="searchInput" class="visually-hidden"
+                  >Search Products</label
+                >
+                <input
+                  type="text"
+                  id="searchInput"
+                  class="search-input"
+                  placeholder="Search products..."
+                  autocomplete="off"
+                />
+                <!-- Dropdown suggestions -->
+                <div id="searchSuggestions" class="search-suggestions hidden">
+                  <div class="suggestion-item" data-keyword="CeraVe">
+                    CeraVe
+                  </div>
+                  <div class="suggestion-item" data-keyword="retinol">
+                    Retinol
+                  </div>
+                  <div class="suggestion-item" data-keyword="radiance">
+                    Radiance
+                  </div>
+                  <div class="suggestion-item" data-keyword="moisturizer">
+                    Moisturizer
+                  </div>
+                  <div class="suggestion-item" data-keyword="vitamin C">
+                    Vitamin C
+                  </div>
+                  <div class="suggestion-item" data-keyword="hyaluronic">
+                    Hyaluronic Acid
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <label for="categoryFilter" class="visually-hidden"
-              >Filter by Category</label
-            >
-            <select id="categoryFilter" class="category-dropdown">
-              <option value="all">All Categories</option>
-              <option value="cleanser">Cleansers</option>
-              <option value="moisturizer">Moisturizers</option>
-              <option value="skincare">Skincare</option>
-              <option value="makeup">Makeup</option>
-              <option value="haircare">Haircare</option>
-              <option value="hair color">Hair Color</option>
-              <option value="hair styling">Hair Styling</option>
-              <option value="men's grooming">Men's Grooming</option>
-              <option value="suncare">Suncare</option>
-              <option value="fragrance">Fragrance</option>
-            </select>
+              <label for="categoryFilter" class="visually-hidden"
+                >Filter by Category</label
+              >
+              <select id="categoryFilter" class="category-dropdown">
+                <option value="all">All Categories</option>
+                <option value="cleanser">Cleansers</option>
+                <option value="moisturizer">Moisturizers</option>
+                <option value="skincare">Skincare</option>
+                <option value="makeup">Makeup</option>
+                <option value="haircare">Haircare</option>
+                <option value="hair color">Hair Color</option>
+                <option value="hair styling">Hair Styling</option>
+                <option value="men's grooming">Men's Grooming</option>
+                <option value="suncare">Suncare</option>
+                <option value="fragrance">Fragrance</option>
+              </select>
+            </div>
           </div>
+          <button
+            class="toggle-section-btn"
+            data-section="product-section"
+            aria-label="Toggle products section"
+          >
+            −
+          </button>
         </div>
 
         <!-- JS injects cards -->
-        <div id="productGrid" class="product-grid"></div>
+        <div id="productGrid" class="product-grid section-content"></div>
       </section>
 
       <!-- SELECTED PRODUCTS -->
       <section class="selected-section">
-        <h2>Your Selected Products</h2>
-
-        <div id="selectedProducts" class="selected-products">
-          <p class="empty-message">
-            No products selected yet. Tap any product to add it!
-          </p>
+        <div class="section-header">
+          <h2>Your Selected Products</h2>
+          <button
+            class="toggle-section-btn"
+            data-section="selected-section"
+            aria-label="Toggle selected products"
+          >
+            −
+          </button>
         </div>
 
-        <div class="selected-actions">
-          <button class="routine-btn" id="generateRoutineBtn">
-            Generate Routine
-          </button>
-          <button id="clearSelectedBtn" class="clear-btn">Clear All</button>
+        <div class="section-content">
+          <div id="selectedProducts" class="selected-products">
+            <p class="empty-message">
+              No products selected yet. Tap any product to add it!
+            </p>
+          </div>
+
+          <div class="selected-actions">
+            <button class="routine-btn" id="generateRoutineBtn">
+              Generate Routine
+            </button>
+            <button id="clearSelectedBtn" class="clear-btn">Clear All</button>
+          </div>
         </div>
       </section>
 
