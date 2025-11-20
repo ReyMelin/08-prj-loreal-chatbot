@@ -11,6 +11,8 @@ const searchSuggestions = document.getElementById("searchSuggestions"); // New d
 const selectedProductsDiv = document.getElementById("selectedProducts");
 const generateRoutineBtn = document.getElementById("generateRoutineBtn");
 const clearSelectedBtn = document.getElementById("clearSelectedBtn");
+const loadingScreen = document.getElementById("loadingScreen");
+const mainContent = document.getElementById("mainContent");
 
 /* ================================
    STATE
@@ -48,12 +50,34 @@ async function loadProducts() {
     if (selectedProducts.length > 0) {
       updateSelectedProductsUI();
     }
+
+    // Start fade-out after 5 seconds (matches logo fade-in duration)
+    setTimeout(() => {
+      // Add fade-out class to trigger smooth opacity transition
+      loadingScreen.classList.add("fade-out");
+
+      // Show main content
+      mainContent.style.display = "grid";
+
+      // Remove loading screen from DOM after fade completes (5s transition + small buffer)
+      setTimeout(() => {
+        loadingScreen.style.display = "none";
+      }, 5100); // Wait for 5-second fade-out to complete
+    }, 5000); // Wait 5 seconds before starting fade-out
   } catch (err) {
     console.error("Error loading products:", err);
 
-    // Show an error message in the product grid
+    // Show error and hide loading screen
     productGrid.innerHTML =
       "<p>Error loading products. Please try again later.</p>";
+
+    // Fade out even on error
+    loadingScreen.classList.add("fade-out");
+    mainContent.style.display = "grid";
+
+    setTimeout(() => {
+      loadingScreen.style.display = "none";
+    }, 5100);
   }
 }
 

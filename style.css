@@ -741,6 +741,46 @@ body {
 }
 
 /* -------------------------
+   LOADING SCREEN
+   ------------------------- */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #555555; /* Medium grey background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  opacity: 1; /* Start visible */
+  transition: opacity 3s ease-in-out; /* 3-second smooth fade */
+}
+
+.loading-screen.fade-out {
+  opacity: 0; /* Fade to transparent */
+  pointer-events: none; /* Disable interaction when fading out */
+}
+
+.loading-logo {
+  width: 300px;
+  height: auto;
+  animation: logoFadeIn 3s ease-in-out; /* 5-second logo fade in */
+}
+
+@keyframes logoFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* -------------------------
    RESPONSIVE TWEAKS
    ------------------------- */
 @media (max-width: 980px) {
@@ -772,4 +812,50 @@ body {
   .selected-section {
     order: 3;
   } /* let selected product area stack nicely */
+}
+
+/* -------------------------
+   CATEGORY DROPDOWN STYLING
+   ------------------------- */
+.category-dropdown {
+  min-width: 220px;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--panel-bg);
+  font-size: 0.95rem;
+  cursor: pointer;
+  font-family: var(--ff-sans);
+  font-weight: 500;
+  color: var(--text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  appearance: none; /* Remove default browser styling */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23e3a535' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem; /* Make space for the arrow */
+}
+
+.category-dropdown:hover {
+  border-color: var(--accent-gold);
+  box-shadow: 0 2px 8px rgba(227, 165, 53, 0.15);
+}
+
+.category-dropdown:focus {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+  border-color: var(--accent-gold);
+}
+
+/* Style the dropdown options */
+.category-dropdown option {
+  padding: 0.5rem;
+  background: var(--bg);
+  color: var(--text);
+  font-weight: 500;
+}
+
+.category-dropdown option:first-child {
+  color: var(--muted);
+  font-style: italic;
 }
