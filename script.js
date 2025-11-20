@@ -14,6 +14,7 @@ const clearSelectedBtn = document.getElementById("clearSelectedBtn");
 const loadingScreen = document.getElementById("loadingScreen");
 const mainContent = document.getElementById("mainContent");
 const toggleButtons = document.querySelectorAll(".toggle-section-btn");
+const searchProductsBtn = document.getElementById("searchProductsBtn");
 
 /* ================================
    STATE
@@ -773,4 +774,38 @@ function addScottGreeting() {
 
     addChatBubble(greeting2, "ai");
   }, 2000); // Wait 2 seconds
+}
+
+/* ================================
+   EVENT: SEARCH FOR PRODUCTS
+================================ */
+if (searchProductsBtn) {
+  searchProductsBtn.addEventListener("click", () => {
+    // Check if any products are selected
+    if (selectedProducts.length === 0) {
+      addChatBubble(
+        "Please select at least one product to search for! 🛍️",
+        "ai"
+      );
+      return;
+    }
+
+    // Create a search query with all selected product names
+    const productNames = selectedProducts
+      .map((p) => `${p.brand} ${p.name}`)
+      .join(" ");
+
+    // Open Google search in a new tab with the selected products
+    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
+      productNames + " buy online"
+    )}`;
+
+    window.open(searchUrl, "_blank");
+
+    // Add a chat message confirming the action
+    addChatBubble(
+      `Opening search results for your selected products! Check stores like Amazon, Ulta, Target, or CVS. 🛒✨`,
+      "ai"
+    );
+  });
 }

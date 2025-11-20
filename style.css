@@ -74,7 +74,7 @@ body {
   padding: var(--space-lg);
   display: grid;
   grid-template-columns: 1fr 1fr; /* two equal columns */
-  grid-template-rows: auto auto auto auto; /* 4 rows: header, products/chat, selected/chat, footer */
+  grid-template-rows: auto auto auto auto; /* 4 rows: header, products/chat, selected/where-to-buy, footer */
   gap: var(--space-lg);
   align-items: start;
 }
@@ -84,7 +84,7 @@ body {
   .page-wrapper {
     grid-template-columns: 1fr;
     padding: var(--space-md);
-    grid-template-rows: auto auto auto auto auto; /* 5 rows for mobile */
+    grid-template-rows: auto auto auto auto auto auto; /* 6 rows for mobile */
   }
 
   /* Mobile stacking order */
@@ -111,10 +111,16 @@ body {
     order: 3;
   }
 
-  .site-footer {
+  .where-to-buy-section {
     grid-column: 1;
     grid-row: 5;
     order: 4;
+  }
+
+  .site-footer {
+    grid-column: 1;
+    grid-row: 6;
+    order: 5;
   }
 
   .product-grid {
@@ -228,7 +234,7 @@ body {
 }
 
 /* -------------------------
-   PRODUCT BROWSE (LEFT COLUMN)
+   PRODUCT BROWSE (LEFT COLUMN, ROW 2)
    ------------------------- */
 .product-section {
   grid-column: 1;
@@ -461,7 +467,7 @@ body {
 }
 
 /* -------------------------
-   SELECTED PRODUCTS (LEFT COLUMN, BELOW PRODUCTS)
+   SELECTED PRODUCTS (LEFT COLUMN, ROW 3)
    ------------------------- */
 .selected-section {
   grid-column: 1;
@@ -575,17 +581,17 @@ body {
 }
 
 /* -------------------------
-   CHAT AREA (RIGHT COLUMN, SPANS ROWS 2-3)
+   CHAT AREA (RIGHT COLUMN, ROW 2)
    ------------------------- */
 .chatbox {
   grid-column: 2;
-  grid-row: 2 / 4; /* spans from row 2 to row 3 */
+  grid-row: 2;
   background: var(--bg);
   padding: var(--space-md);
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-soft);
-  margin-top: 0; /* remove extra margin since it's in grid */
+  margin-top: 0;
 }
 
 /* Chat window */
@@ -727,7 +733,7 @@ body {
 }
 
 /* -------------------------
-   FOOTER
+   FOOTER (FULL WIDTH, ROW 4)
    ------------------------- */
 .site-footer {
   grid-column: 1 / -1;
@@ -907,7 +913,7 @@ body {
   .page-wrapper {
     grid-template-columns: 1fr;
     padding: var(--space-md);
-    grid-template-rows: auto auto auto auto auto; /* 5 rows for mobile */
+    grid-template-rows: auto auto auto auto auto auto; /* 6 rows for mobile */
   }
 
   /* Mobile stacking order */
@@ -934,10 +940,16 @@ body {
     order: 3;
   }
 
-  .site-footer {
+  .where-to-buy-section {
     grid-column: 1;
     grid-row: 5;
     order: 4;
+  }
+
+  .site-footer {
+    grid-column: 1;
+    grid-row: 6;
+    order: 5;
   }
 
   .product-grid {
@@ -1011,4 +1023,53 @@ body {
 .category-dropdown option:first-child {
   color: var(--muted);
   font-style: italic;
+}
+
+/* -------------------------
+   WHERE TO BUY SECTION (RIGHT COLUMN, ROW 3)
+   ------------------------- */
+.where-to-buy-section {
+  grid-column: 2;
+  grid-row: 3;
+  background: var(--bg);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.where-to-buy-section h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.search-products-btn {
+  background: transparent;
+  border: 2px solid var(--accent-gold);
+  color: var(--accent-gold);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(227, 165, 53, 0.1);
+}
+
+.search-products-btn:hover {
+  background: var(--accent-gold);
+  color: var(--bg);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(227, 165, 53, 0.2);
+}
+
+.search-products-btn:active {
+  transform: translateY(0);
 }
