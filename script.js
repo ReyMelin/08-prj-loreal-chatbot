@@ -52,7 +52,7 @@ async function loadProducts() {
       updateSelectedProductsUI();
     }
 
-    // Start fade-out after 5 seconds (matches logo fade-in duration)
+    // Start fade-out after 3 seconds
     setTimeout(() => {
       // Add fade-out class to trigger smooth opacity transition
       loadingScreen.classList.add("fade-out");
@@ -60,11 +60,23 @@ async function loadProducts() {
       // Show main content
       mainContent.style.display = "grid";
 
-      // Remove loading screen from DOM after fade completes (5s transition + small buffer)
+      // Remove loading screen from DOM after fade completes (3s transition + small buffer)
       setTimeout(() => {
         loadingScreen.style.display = "none";
-      }, 5100); // Wait for 5-second fade-out to complete
-    }, 5000); // Wait 5 seconds before starting fade-out
+
+        // Show typing indicator for 3 seconds before greeting
+        const typingBubble = addChatBubble(
+          '<span class="typing-indicator"><span></span><span></span><span></span></span>',
+          "ai"
+        );
+
+        // After 3 seconds, remove typing indicator and show Scott's greeting
+        setTimeout(() => {
+          typingBubble.remove();
+          addScottGreeting();
+        }, 3000); // Wait 3 seconds while "typing"
+      }, 3100); // Wait for 3-second fade-out to complete
+    }, 3000); // Wait 3 seconds before starting fade-out
   } catch (err) {
     console.error("Error loading products:", err);
 
@@ -78,7 +90,18 @@ async function loadProducts() {
 
     setTimeout(() => {
       loadingScreen.style.display = "none";
-    }, 5100);
+
+      // Show typing indicator even on error
+      const typingBubble = addChatBubble(
+        '<span class="typing-indicator"><span></span><span></span><span></span></span>',
+        "ai"
+      );
+
+      setTimeout(() => {
+        typingBubble.remove();
+        addScottGreeting();
+      }, 3000);
+    }, 3100);
   }
 }
 
@@ -713,4 +736,41 @@ function addChatBubble(message, sender) {
   chatWindow.scrollTop = chatWindow.scrollHeight;
 
   return bubble;
+}
+
+/* ================================
+   SCOTT'S GREETING
+================================ */
+function addScottGreeting() {
+  // First part of Scott's greeting
+  const greeting1 = `
+    <p>Hi there! I'm Scott, your L'Oréal beauty advisor! 💄✨</p>
+    <p>I'm here to help you:</p>
+    <ul>
+      <li>🔍 Browse our amazing L'Oréal products</li>
+      <li>✨ Create personalized beauty routines</li>
+      <li>💡 Get expert skincare, makeup, and haircare tips</li>
+    </ul>
+  `;
+
+  // Add first part of greeting
+  addChatBubble(greeting1, "ai");
+
+  // Show typing indicator for 2 seconds
+  const typingBubble = addChatBubble(
+    '<span class="typing-indicator"><span></span><span></span><span></span></span>',
+    "ai"
+  );
+
+  // After 2 seconds, remove typing indicator and show second part
+  setTimeout(() => {
+    typingBubble.remove();
+
+    // Second part of Scott's greeting
+    const greeting2 = `
+      <p>Select some products from the grid and I'll help you build your perfect routine! What are you looking for today? 😊</p>
+    `;
+
+    addChatBubble(greeting2, "ai");
+  }, 2000); // Wait 2 seconds
 }

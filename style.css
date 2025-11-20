@@ -886,7 +886,7 @@ body {
 .loading-logo {
   width: 300px;
   height: auto;
-  animation: logoFadeIn 3s ease-in-out; /* 5-second logo fade in */
+  animation: logoFadeIn 3s ease-in-out; /* 3-second logo fade in */
 }
 
 @keyframes logoFadeIn {
