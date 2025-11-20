@@ -32,22 +32,56 @@
         <div class="product-controls">
           <h2>Browse Our Products</h2>
 
-          <label for="categoryFilter" class="visually-hidden"
-            >Filter by Category</label
-          >
-          <select id="categoryFilter" class="category-dropdown">
-            <option value="all">All Categories</option>
-            <option value="cleanser">Cleansers</option>
-            <option value="moisturizer">Moisturizers</option>
-            <option value="skincare">Skincare</option>
-            <option value="makeup">Makeup</option>
-            <option value="haircare">Haircare</option>
-            <option value="hair color">Hair Color</option>
-            <option value="hair styling">Hair Styling</option>
-            <option value="men's grooming">Men's Grooming</option>
-            <option value="suncare">Suncare</option>
-            <option value="fragrance">Fragrance</option>
-          </select>
+          <div class="filter-group">
+            <div class="search-wrapper">
+              <label for="searchInput" class="visually-hidden"
+                >Search Products</label
+              >
+              <input
+                type="text"
+                id="searchInput"
+                class="search-input"
+                placeholder="Search products..."
+                autocomplete="off"
+              />
+              <!-- Dropdown suggestions -->
+              <div id="searchSuggestions" class="search-suggestions hidden">
+                <div class="suggestion-item" data-keyword="CeraVe">CeraVe</div>
+                <div class="suggestion-item" data-keyword="retinol">
+                  Retinol
+                </div>
+                <div class="suggestion-item" data-keyword="radiance">
+                  Radiance
+                </div>
+                <div class="suggestion-item" data-keyword="moisturizer">
+                  Moisturizer
+                </div>
+                <div class="suggestion-item" data-keyword="vitamin C">
+                  Vitamin C
+                </div>
+                <div class="suggestion-item" data-keyword="hyaluronic">
+                  Hyaluronic Acid
+                </div>
+              </div>
+            </div>
+
+            <label for="categoryFilter" class="visually-hidden"
+              >Filter by Category</label
+            >
+            <select id="categoryFilter" class="category-dropdown">
+              <option value="all">All Categories</option>
+              <option value="cleanser">Cleansers</option>
+              <option value="moisturizer">Moisturizers</option>
+              <option value="skincare">Skincare</option>
+              <option value="makeup">Makeup</option>
+              <option value="haircare">Haircare</option>
+              <option value="hair color">Hair Color</option>
+              <option value="hair styling">Hair Styling</option>
+              <option value="men's grooming">Men's Grooming</option>
+              <option value="suncare">Suncare</option>
+              <option value="fragrance">Fragrance</option>
+            </select>
+          </div>
         </div>
 
         <!-- JS injects cards -->
